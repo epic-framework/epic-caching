@@ -1,5 +1,5 @@
 # Epic caching &mdash; Utilities for caching
-[![Epic-caching CI](https://github.com/Cybereason/epic-caching/actions/workflows/ci.yml/badge.svg)](https://github.com/Cybereason/epic-caching/actions/workflows/ci.yml)
+[![Epic-caching CI](https://github.com/epic-framework/epic-caching/actions/workflows/ci.yml/badge.svg)](https://github.com/epic-framework/epic-caching/actions/workflows/ci.yml)
 
 
 ## What is it?

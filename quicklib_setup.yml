@@ -6,7 +6,7 @@ setup:
     content_type: text/markdown
   author: Assaf Ben-David, Uri Sternfeld, Yonatan Perry
   license: MIT License
-  url: https://github.com/Cybereason/epic-caching
+  url: https://github.com/epic-framework/epic-caching
 
   python_requires: ">=3.10"
   top_packages:

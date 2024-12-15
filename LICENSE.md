@@ -1,6 +1,12 @@
-MIT License
+## Licensing Information
+- Code up to and including commit hash `7202a7530fa4392bd5e2f8532dd4ff71613c02b2` is licensed
+under the MIT License. Copyright (c) 2023 Cybereason Inc.
+- Any modifications or code contributed to this project after the commit hash mentioned above 
+are licensed under the MIT License. Copyright (c) 2024 Uri Sternfeld, Yonatan Perry and Assaf Ben-David.
 
-Copyright (c) 2023 Cybereason Inc.
+## MIT License
+- Copyright (c) 2023 Cybereason Inc.
+- Copyright (c) 2024 Uri Sternfeld, Yonatan Perry and Assaf Ben-David
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

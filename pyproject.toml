@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "epic-caching"
+version = "1.1.0"
+description = "Utilities for caching"
+authors = ["Assaf Ben-David", "Uri Sternfeld", "Yonatan Perry"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/epic-framework/epic-caching"
+packages = [{include = "epic"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+decorator = "*"
+epic-common = "*"
+
+[tool.poetry.group.test.dependencies]
+pytest = "*"
+pytest-cov = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

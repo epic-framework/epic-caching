@@ -16,6 +16,7 @@ epic-common = "*"
 [tool.poetry.group.test.dependencies]
 pytest = "*"
 pytest-cov = "*"
+pytest-timeout = "*"
 
 [build-system]
 requires = ["poetry-core"]

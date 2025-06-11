@@ -224,3 +224,19 @@ def test_lazy_property():
     value = obj.prop
     assert value is not None
     assert obj.prop is value
+
+
+async def test_async():
+    started = False
+    @cached
+    async def func():
+        nonlocal started
+        started = True
+        return random.random()
+    assert not started
+    f1 = func()
+    assert not started
+    a = await f1
+    assert started
+    b = await func()
+    assert a == b

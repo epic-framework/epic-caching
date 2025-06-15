@@ -17,7 +17,7 @@ epic-common = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-timeout = "*"
-pytest-asyncio = "*"
+pytest-asyncio = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]

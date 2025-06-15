@@ -67,6 +67,9 @@ assert func(4) is func(4)
 If instead we used `@cached(scope='thread')`, repeated calls with the same arguments within the same thread would
 return the same object, but not in different threads.
 
+> ℹ️ **Concurrent programming:**  
+> Async functions and methods can be cached using the same syntax.
+
 > ⚠️ **Caching methods:**  
 > The decorator does not handle methods any differently than regular functions, i.e. `self` is
 > treated like any other argument. This means that, for a `@cached` method, if any member of `self` has changed,

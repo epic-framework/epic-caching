@@ -8,7 +8,7 @@ from typing import TypeVar, ParamSpec, Concatenate, Literal, Any
 from epic.common.general import hash_content
 
 from ._cache import Cache, ThreadCache, ProcessCache
-from ._async import CoroutineFactory, requires_async_caching
+from ._async import CachedAwaitableRunner, requires_async_caching
 
 
 T = TypeVar('T')
@@ -38,20 +38,18 @@ def _cached_call_impl(
         bound_args = inspect.signature(init_method).bind(None, *args, **kwargs)
     key = hash_content(bound_args.arguments)
     is_async = requires_async_caching(callfunc)
-    if is_async:
-        cache: Cache[int, CoroutineFactory[T]] = cache_class(name)
-    else:
-        cache: Cache[int, T] = cache_class(name)
+    cache: Cache[int, CachedAwaitableRunner if is_async else T] = cache_class(name)
+    print(f"--- cache: {key=} | {bound_args.arguments=}")
     if key not in cache:
         with cache.lock(key):
             if key not in cache:
                 result = callfunc(*args, **kwargs)
                 if is_async:
-                    result = CoroutineFactory(result)
+                    result = CachedAwaitableRunner(result)
                 cache[key] = result
     result = cache[key]
     if is_async:
-        result = result.make_secondary()
+        result = result.cached_run()
     return result
 
 

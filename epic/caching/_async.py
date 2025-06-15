@@ -1,38 +1,40 @@
 import asyncio
 import inspect
-from typing import Awaitable, TypeVar, Generic
+from typing import TypeVar, Generic
+from collections.abc import Awaitable
 
 T = TypeVar('T')
 
 
-class CoroutineFactory(Generic[T]):
-    """A factory for 'secondary' coroutines that, when awaited, each return the result of a 'primary' coroutine.
-    This enables caching of async functions, which don't return values but instead coroutines which can only be
+class CachedAwaitableRunner(Generic[T]):
+    """Given an Awaitable, allow await-ing it multiple times by running it once and caching the result.
+    The original coroutine is lazily started only upon the first all to `cached_run`.
+
+    This class enables caching of async functions, which don't return values but instead coroutines which can only be
     awaited once.
-    The primary coroutine is lazily started only when one of the secondary coroutines is started.
     """
-    def __init__(self, coroutine: Awaitable[T]):
-        self.primary = coroutine
-        self.shared_future = asyncio.Future()
-        self.primary_started = False
+    def __init__(self, awaitable: Awaitable[T]):
+        self.awaitable = awaitable
+        self.task = None
+        self.shared_future = None
         self.start_lock = asyncio.Lock()
 
-    async def _run_primary(self):
+    async def cached_run(self) -> T:
+        if self.task is None:
+            async with self.start_lock:
+                if self.task is None:
+                    self.shared_future = asyncio.get_running_loop().create_future()
+                    self.task = asyncio.create_task(self._run())
+        return await self.shared_future
+
+    async def _run(self):
         try:
-            result = await self.primary
+            result = await self.awaitable
             if not self.shared_future.done():
                 self.shared_future.set_result(result)
         except Exception as e:
             if not self.shared_future.done():
                 self.shared_future.set_exception(e)
-
-    async def make_secondary(self) -> Awaitable[T]:
-        if not self.primary_started:
-            async with self.start_lock:
-                if not self.primary_started:
-                    self.primary_started = True
-                    asyncio.create_task(self._run_primary())
-        return await self.shared_future
 
 
 def requires_async_caching(func):

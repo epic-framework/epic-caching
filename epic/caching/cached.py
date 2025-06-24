@@ -38,8 +38,7 @@ def _cached_call_impl(
         bound_args = inspect.signature(init_method).bind(None, *args, **kwargs)
     key = hash_content(bound_args.arguments)
     is_async = requires_async_caching(callfunc)
-    cache: Cache[int, CachedAwaitableRunner if is_async else T] = cache_class(name)
-    print(f"--- cache: {key=} | {bound_args.arguments=}")
+    cache: Cache = cache_class(name)
     if key not in cache:
         with cache.lock(key):
             if key not in cache:

@@ -8,6 +8,7 @@ from typing import TypeVar, ParamSpec, Concatenate, Literal, Any
 from epic.common.general import hash_content
 
 from ._cache import Cache, ThreadCache, ProcessCache
+from ._async import CachedAwaitableRunner, requires_async_caching
 
 
 T = TypeVar('T')
@@ -36,12 +37,19 @@ def _cached_call_impl(
         # Add an extra argument for 'self'
         bound_args = inspect.signature(init_method).bind(None, *args, **kwargs)
     key = hash_content(bound_args.arguments)
-    cache: Cache[int, T] = cache_class(name)
+    is_async = requires_async_caching(callfunc)
+    cache: Cache = cache_class(name)
     if key not in cache:
         with cache.lock(key):
             if key not in cache:
-                cache[key] = callfunc(*args, **kwargs)
-    return cache[key]
+                result = callfunc(*args, **kwargs)
+                if is_async:
+                    result = CachedAwaitableRunner(result)
+                cache[key] = result
+    result = cache[key]
+    if is_async:
+        result = result.cached_run()
+    return result
 
 
 def cached_call(callable_obj: Callable[P, T], *args: P.args, scope: Scope = 'process',

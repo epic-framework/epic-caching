@@ -13,8 +13,8 @@ on:
     types: [opened, reopened]
 
 jobs:
-  test:
-    uses: epic-framework/.github/.github/workflows/test.yml@v1
-    with:
-      archive_artifacts: true
+  test:
+    uses: epic-framework/.github/.github/workflows/test.yml@v1
+    with:
+      archive_artifacts: true
 
